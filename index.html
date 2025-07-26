@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaFinder - Buscador Acuícola Especializado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        #results-container .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        #results-container .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-blue-700">AquaFinder</h1>
+            <div class="text-right text-sm">
+                <p class="font-semibold">Un proyecto de:</p>
+                <p>Jaime Ulises Paz Lopez</p>
+                <a href="https://wa.me/584121043327" target="_blank" class="text-green-600 hover:text-green-700 font-bold flex items-center justify-end space-x-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99 0-3.903-.52-5.687-1.475L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.267.655 4.398 1.803 6.283l-1.232 4.495 4.639-1.232z"/></svg>
+                    <span>Contactar por WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <div class="max-w-4xl mx-auto">
+            
+            <!-- Search Form -->
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold mb-2">Buscador de Proveedores Acuícolas</h2>
+                <p class="text-gray-600 mb-6">Encuentra lo que necesitas para tu proyecto acuícola en Latinoamérica y el mundo.</p>
+
+                <!-- Step 1: Country -->
+                <div class="mb-6">
+                    <label for="country" class="block text-lg font-semibold mb-2">1. Selecciona tu país</label>
+                    <select id="country" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">-- Elige un país --</option>
+                        <optgroup label="Países de Habla Hispana">
+                            <option value="Argentina">Argentina</option>
+                            <option value="Bolivia">Bolivia</option>
+                            <option value="Chile">Chile</option>
+                            <option value="Colombia">Colombia</option>
+                            <option value="Costa Rica">Costa Rica</option>
+                            <option value="Cuba">Cuba</option>
+                            <option value="Ecuador">Ecuador</option>
+                            <option value="El Salvador">El Salvador</option>
+                            <option value="España">España</option>
+                            <option value="Guatemala">Guatemala</option>
+                            <option value="Guinea Ecuatorial">Guinea Ecuatorial</option>
+                            <option value="Honduras">Honduras</option>
+                            <option value="México">México</option>
+                            <option value="Nicaragua">Nicaragua</option>
+                            <option value="Panamá">Panamá</option>
+                            <option value="Paraguay">Paraguay</option>
+                            <option value="Perú">Perú</option>
+                            <option value="República Dominicana">República Dominicana</option>
+                            <option value="Uruguay">Uruguay</option>
+                            <option value="Venezuela">Venezuela</option>
+                        </optgroup>
+                        <optgroup label="Resto de los Países">
+                            <option value="Estados Unidos">Estados Unidos</option>
+                            <option value="Brasil">Brasil</option>
+                            <option value="Canadá">Canadá</option>
+                            <option value="China">China</option>
+                            <option value="India">India</option>
+                            <!-- Add other relevant countries as needed -->
+                        </optgroup>
+                    </select>
+                </div>
+
+                <!-- Step 2: Details -->
+                <div class="mb-6">
+                    <label for="query-details" class="block text-lg font-semibold mb-2">2. Detalla qué producto o servicio buscas</label>
+                    <textarea id="query-details" rows="5" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Ej: Sensores de oxígeno disuelto con conexión a internet para monitoreo continuo en granjas de camarón."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button id="search-btn" class="w-full bg-blue-600 text-white font-bold text-lg p-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-400">
+                        Buscar Proveedores
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results-container" class="mt-10">
+                <!-- Loading indicator -->
+                <div id="loading" class="text-center py-10 hidden">
+                    <div class="flex justify-center items-center space-x-3">
+                        <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span class="text-xl font-semibold text-gray-700">Buscando en la red global de proveedores...</span>
+                    </div>
+                </div>
+                
+                <!-- Error message -->
+                <div id="error-message" class="text-center p-6 bg-red-100 border border-red-400 text-red-700 rounded-lg hidden"></div>
+
+                <!-- Results will be injected here -->
+                <div id="results-output"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONFIGURATION ---
+            const apiKey = "AIzaSyCZb6w1tSE-rJHuq12jhYQRIxn9Y-IHYXQ";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            // --- UI ELEMENTS ---
+            const countrySelect = document.getElementById('country');
+            const queryDetails = document.getElementById('query-details');
+            const searchBtn = document.getElementById('search-btn');
+            const loadingIndicator = document.getElementById('loading');
+            const resultsOutput = document.getElementById('results-output');
+            const errorMessageContainer = document.getElementById('error-message');
+
+            // --- EVENT LISTENER ---
+            searchBtn.addEventListener('click', performSearch);
+
+            // --- PROMPT ENGINEERING ---
+            function buildPrompt(country, details) {
+                return `
+                    Eres un asistente de investigación especializado en el sector acuícola global. Tu tarea es encontrar proveedores basándote en la solicitud de un usuario.
+
+                    **Solicitud del Usuario:**
+                    - País de Interés Principal: ${country}
+                    - Búsqueda Detallada: "Busco proveedores de ${details}"
+
+                    **Tu Misión:**
+                    1.  Identifica el tipo de producto o servicio en la búsqueda detallada.
+                    2.  Busca proveedores que coincidan.
+                    3.  Divide los resultados en DOS grupos: "national_suppliers" (dentro de ${country}) y "regional_suppliers" (en el mismo continente).
+                    4.  Para cada proveedor, obtén: name, country, website, phone, email.
+                    5.  Si no encuentras un dato, usa "No disponible".
+                    6.  Si no encuentras proveedores para una categoría, devuelve una lista vacía.
+
+                    **Formato de Salida Obligatorio:**
+                    Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional. La estructura debe ser:
+                    {
+                      "national_suppliers": [{"name": "...", "country": "...", "website": "...", "phone": "...", "email": "..."}],
+                      "regional_suppliers": [{"name": "...", "country": "...", "website": "...", "phone": "...", "email": "..."}]
+                    }
+                `;
+            }
+
+            // --- DISPLAY RESULTS ---
+            function displayResults(data, userCountry) {
+                resultsOutput.innerHTML = ''; 
+
+                if (!data.national_suppliers?.length && !data.regional_suppliers?.length) {
+                    displayError("No se encontraron proveedores que coincidan con tu búsqueda. Intenta ser más específico o prueba con otros términos.");
+                    return;
+                }
+
+                if (data.national_suppliers && data.national_suppliers.length > 0) {
+                    const nationalSection = createResultSection(`Proveedores en ${userCountry}`, data.national_suppliers);
+                    resultsOutput.appendChild(nationalSection);
+                }
+
+                if (data.regional_suppliers && data.regional_suppliers.length > 0) {
+                    const regionalSection = createResultSection('Proveedores Regionales (Continente)', data.regional_suppliers);
+                    resultsOutput.appendChild(regionalSection);
+                }
+            }
+            
+            function createResultSection(title, suppliers) {
+                const section = document.createElement('div');
+                section.className = 'mb-8';
+                
+                const heading = document.createElement('h3');
+                heading.className = 'text-2xl font-bold mb-4 pb-2 border-b-2 border-blue-200';
+                heading.textContent = title;
+                section.appendChild(heading);
+
+                const grid = document.createElement('div');
+                grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+                
+                suppliers.forEach(supplier => {
+                    const card = document.createElement('div');
+                    card.className = 'card bg-white p-6 rounded-lg border border-gray-200 shadow-sm';
+                    card.innerHTML = `
+                        <h4 class="text-xl font-bold text-blue-800">${supplier.name || 'Nombre no disponible'}</h4>
+                        <p class="font-semibold text-gray-600 mb-4">${supplier.country || 'País no disponible'}</p>
+                        <div class="space-y-2 text-sm">
+                            <p><strong>Web:</strong> ${supplier.website && supplier.website !== 'No disponible' ? `<a href="${supplier.website}" target="_blank" class="text-blue-600 hover:underline">${supplier.website}</a>` : 'No disponible'}</p>
+                            <p><strong>Teléfono:</strong> ${supplier.phone || 'No disponible'}</p>
+                            <p><strong>Email:</strong> ${supplier.email && supplier.email !== 'No disponible' ? `<a href="mailto:${supplier.email}" class="text-blue-600 hover:underline">${supplier.email}</a>` : 'No disponible'}</p>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                section.appendChild(grid);
+                return section;
+            }
+
+            function displayError(message) {
+                errorMessageContainer.innerHTML = message; // Use innerHTML to allow for bold tags
+                errorMessageContainer.classList.remove('hidden');
+                resultsOutput.innerHTML = '';
+            }
+
+            // --- MAIN SEARCH FUNCTION ---
+            async function performSearch() {
+                const country = countrySelect.value;
+                const details = queryDetails.value.trim();
+
+                // Validation
+                countrySelect.classList.remove('border-red-500', 'border-2');
+                queryDetails.classList.remove('border-red-500', 'border-2');
+                if (!country || !details) {
+                    displayError("Por favor, selecciona un país y detalla tu búsqueda.");
+                    if (!country) queryDetails.classList.add('border-red-500', 'border-2');
+                    if (!details) queryDetails.classList.add('border-red-500', 'border-2');
+                    return;
+                }
+
+                // UI updates for loading state
+                searchBtn.disabled = true;
+                loadingIndicator.classList.remove('hidden');
+                resultsOutput.innerHTML = '';
+                errorMessageContainer.classList.add('hidden');
+
+                try {
+                    const prompt = buildPrompt(country, details);
+                    const payload = {
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    };
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    // Enhanced Error Handling
+                    if (!response.ok) {
+                        // Check for specific permission error (403 Forbidden)
+                        if (response.status === 403) {
+                             throw new Error(`<b>Error de Permiso (403):</b> La clave de API es correcta pero no tiene permiso para ser usada desde este origen (ej: 'file://'). Debes configurar los 'Referentes HTTP' en tu consola de Google Cloud para permitir el dominio donde se aloja esta página o eliminar las restricciones para pruebas locales.`);
+                        }
+                        const errorData = await response.json().catch(() => null); // Catch if error response is not JSON
+                        const errorMessage = errorData?.error?.message || `Error de red o de la API (Código: ${response.status})`;
+                        throw new Error(errorMessage);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (!result.candidates || !result.candidates[0].content.parts[0].text) {
+                        throw new Error("La respuesta de la IA no tuvo el formato esperado.");
+                    }
+                    
+                    // Directly parse the text part, as we requested JSON
+                    const data = JSON.parse(result.candidates[0].content.parts[0].text);
+                    displayResults(data, country);
+
+                } catch (error) {
+                    console.error("Error detallado durante la búsqueda:", error);
+                    // Display the potentially rich error message
+                    displayError(`Ocurrió un error al procesar la búsqueda. <br><br><b>Detalle:</b> ${error.message}`);
+                } finally {
+                    searchBtn.disabled = false;
+                    loadingIndicator.classList.add('hidden');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
